@@ -361,6 +361,16 @@ export default function ActiveDraftScreen() {
 
   const cellHeight = isZoomedOut ? 48 : 72;
 
+  // Keep refs of sheetMode and isUserTurn to avoid stale closure in PanResponder callbacks
+  const sheetModeRef = useRef(sheetMode);
+  sheetModeRef.current = sheetMode;
+
+  const isUserTurnRef = useRef(isUserTurn);
+  isUserTurnRef.current = isUserTurn;
+
+  const activeTransitionModeRef = useRef(sheetMode);
+  activeTransitionModeRef.current = sheetMode;
+
   // Bottom Sheet Swipe Dragging (PanResponder) Setup
   const lastSheetHeight = useRef(200);
   const gestureStartHeight = useRef(200);
@@ -385,24 +395,32 @@ export default function ActiveDraftScreen() {
         sheetHeightAnim.stopAnimation();
         gestureStartHeight.current = lastSheetHeight.current;
         hasTriggeredRef.current = false;
+        activeTransitionModeRef.current = sheetModeRef.current;
       },
       onPanResponderMove: (_, gestureState) => {
         if (hasTriggeredRef.current) return;
 
+        const currentMode = sheetModeRef.current;
+
         // Instantly transition and snap upon detecting vertical swipe movement
-        if (gestureState.dy > 15 && sheetMode !== 'collapsed') {
+        if (gestureState.dy > 15 && currentMode !== 'collapsed') {
           hasTriggeredRef.current = true;
+          activeTransitionModeRef.current = 'collapsed';
           setSheetMode('collapsed');
-        } else if (gestureState.dy < -15 && sheetMode !== 'full') {
+        } else if (gestureState.dy < -15 && currentMode !== 'full') {
           hasTriggeredRef.current = true;
+          activeTransitionModeRef.current = 'full';
           setSheetMode('full');
         }
       },
       onPanResponderRelease: () => {
         // Enforce smooth alignment to whichever sheetMode is active upon touch release
-        const collapsedHeight = isUserTurn ? 340 : 180;
+        const collapsedHeight = isUserTurnRef.current ? 340 : 180;
         const fullHeight = SCREEN_HEIGHT * 0.92;
-        const targetHeight = sheetMode === 'collapsed' ? collapsedHeight : fullHeight;
+        
+        // Use the active/intended transition mode if we triggered one, otherwise fall back to current state
+        const targetMode = hasTriggeredRef.current ? activeTransitionModeRef.current : sheetModeRef.current;
+        const targetHeight = targetMode === 'collapsed' ? collapsedHeight : fullHeight;
 
         Animated.spring(sheetHeightAnim, {
           toValue: targetHeight,
