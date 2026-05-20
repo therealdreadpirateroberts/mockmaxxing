@@ -232,7 +232,22 @@ export default function ActiveDraftScreen() {
 
   // Animated values
   const sheetHeightAnim = useRef(new Animated.Value(200)).current;
+  const dragHandleActiveAnim = useRef(new Animated.Value(0)).current;
   const pulseAnim = useRef(new Animated.Value(1)).current;
+
+  // Premium drag handle micro-interaction interpolations
+  const handleWidth = dragHandleActiveAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [36, 52], // stretches wider when held
+  });
+  const handleOpacity = dragHandleActiveAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0.35, 0.8], // brightens when active
+  });
+  const handleScale = dragHandleActiveAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [1, 1.3], // slightly grows thicker
+  });
   
   // ScrollView references for horizontal auto-scrolling
   const horizontalBoardScroll = useRef<ScrollView>(null);
