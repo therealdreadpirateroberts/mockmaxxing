@@ -328,8 +328,8 @@ export default function ActiveDraftScreen() {
                                        p.team.toLowerCase().includes(searchQuery.toLowerCase()))
       : filteredCandidates;
 
-    // Return the top 6 suggestions of this position
-    return searchedCandidates.slice(0, 6);
+    // Return all suggestions matching filters to allow doom scrolling
+    return searchedCandidates;
   }, [players, currentPick, posFilter, searchQuery, setup]);
 
   // Filtered available list for Rankings tab
