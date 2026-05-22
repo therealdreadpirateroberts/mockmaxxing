@@ -11,12 +11,21 @@ import * as Haptics from 'expo-haptics';
 import Svg, { Path, Circle, G, Rect } from 'react-native-svg';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 
+interface PickInfo {
+  name: string;
+  position: string;
+  team: string;
+  image: string;
+  pick: string;
+  round: number;
+}
+
 interface DraftRecap {
   id: string;
   grade: string;
   efficiency: string;
   projectedRecord: string;
-  topPick: { name: string; position: string; team: string; image: string; pick: string };
+  topPicks: PickInfo[];
   pointsPerGame: string;
   byeWeekStrength: string;
   syncId: string;
@@ -28,20 +37,39 @@ function RecapContent() {
   const { theme } = useThemeStore();
   const [activeCardIndex, setActiveCardIndex] = useState(0);
 
-  // High-fidelity Mock Draft History Recaps in chronological order
+  // High-fidelity Mock Draft History Recaps with top three picks
   const draftRecaps: DraftRecap[] = [
     {
       id: '1',
       grade: 'A+',
       efficiency: '98.6%',
       projectedRecord: '13-1',
-      topPick: {
-        name: 'Christian McCaffrey',
-        position: 'RB',
-        team: 'SF',
-        image: 'https://a.espncdn.com/i/headshots/nfl/players/full/3117251.png',
-        pick: '1.01',
-      },
+      topPicks: [
+        {
+          name: 'Christian McCaffrey',
+          position: 'RB',
+          team: 'SF',
+          image: 'https://a.espncdn.com/i/headshots/nfl/players/full/3117251.png',
+          pick: '1.01',
+          round: 1,
+        },
+        {
+          name: 'Davante Adams',
+          position: 'WR',
+          team: 'LV',
+          image: 'https://a.espncdn.com/i/headshots/nfl/players/full/16800.png',
+          pick: '2.12',
+          round: 2,
+        },
+        {
+          name: 'Travis Kelce',
+          position: 'TE',
+          team: 'KC',
+          image: 'https://a.espncdn.com/i/headshots/nfl/players/full/15847.png',
+          pick: '3.01',
+          round: 3,
+        }
+      ],
       pointsPerGame: '128.4 PPG',
       byeWeekStrength: 'Rank: #1',
       syncId: 'MX-986-CM31',
@@ -51,13 +79,32 @@ function RecapContent() {
       grade: 'A-',
       efficiency: '94.2%',
       projectedRecord: '11-3',
-      topPick: {
-        name: 'CeeDee Lamb',
-        position: 'WR',
-        team: 'DAL',
-        image: 'https://a.espncdn.com/i/headshots/nfl/players/full/4426385.png',
-        pick: '1.04',
-      },
+      topPicks: [
+        {
+          name: 'CeeDee Lamb',
+          position: 'WR',
+          team: 'DAL',
+          image: 'https://a.espncdn.com/i/headshots/nfl/players/full/4426385.png',
+          pick: '1.04',
+          round: 1,
+        },
+        {
+          name: 'Kyren Williams',
+          position: 'RB',
+          team: 'LAR',
+          image: 'https://a.espncdn.com/i/headshots/nfl/players/full/4430737.png',
+          pick: '2.09',
+          round: 2,
+        },
+        {
+          name: 'Sam LaPorta',
+          position: 'TE',
+          team: 'DET',
+          image: 'https://a.espncdn.com/i/headshots/nfl/players/full/4430027.png',
+          pick: '3.04',
+          round: 3,
+        }
+      ],
       pointsPerGame: '119.8 PPG',
       byeWeekStrength: 'Rank: #3',
       syncId: 'MX-942-CL44',
@@ -67,13 +114,32 @@ function RecapContent() {
       grade: 'A',
       efficiency: '96.1%',
       projectedRecord: '12-2',
-      topPick: {
-        name: 'Breece Hall',
-        position: 'RB',
-        team: 'NYJ',
-        image: 'https://a.espncdn.com/i/headshots/nfl/players/full/4427366.png',
-        pick: '1.06',
-      },
+      topPicks: [
+        {
+          name: 'Breece Hall',
+          position: 'RB',
+          team: 'NYJ',
+          image: 'https://a.espncdn.com/i/headshots/nfl/players/full/4427366.png',
+          pick: '1.06',
+          round: 1,
+        },
+        {
+          name: 'Drake London',
+          position: 'WR',
+          team: 'ATL',
+          image: 'https://a.espncdn.com/i/headshots/nfl/players/full/4431508.png',
+          pick: '2.07',
+          round: 2,
+        },
+        {
+          name: 'Josh Allen',
+          position: 'QB',
+          team: 'BUF',
+          image: 'https://a.espncdn.com/i/headshots/nfl/players/full/3918298.png',
+          pick: '3.06',
+          round: 3,
+        }
+      ],
       pointsPerGame: '122.5 PPG',
       byeWeekStrength: 'Rank: #2',
       syncId: 'MX-961-BH44',
@@ -83,13 +149,32 @@ function RecapContent() {
       grade: 'B+',
       efficiency: '89.8%',
       projectedRecord: '10-4',
-      topPick: {
-        name: 'Patrick Mahomes',
-        position: 'QB',
-        team: 'KC',
-        image: 'https://a.espncdn.com/i/headshots/nfl/players/full/3139477.png',
-        pick: '2.08',
-      },
+      topPicks: [
+        {
+          name: 'Amon-Ra St. Brown',
+          position: 'WR',
+          team: 'DET',
+          image: 'https://a.espncdn.com/i/headshots/nfl/players/full/4361370.png',
+          pick: '1.05',
+          round: 1,
+        },
+        {
+          name: 'Patrick Mahomes',
+          position: 'QB',
+          team: 'KC',
+          image: 'https://a.espncdn.com/i/headshots/nfl/players/full/3139477.png',
+          pick: '2.08',
+          round: 2,
+        },
+        {
+          name: 'Josh Jacobs',
+          position: 'RB',
+          team: 'GB',
+          image: 'https://a.espncdn.com/i/headshots/nfl/players/full/4047365.png',
+          pick: '3.05',
+          round: 3,
+        }
+      ],
       pointsPerGame: '112.4 PPG',
       byeWeekStrength: 'Rank: #5',
       syncId: 'MX-898-PM31',
@@ -114,27 +199,7 @@ function RecapContent() {
     }
   };
 
-  // Renders a simulated barcode matching Starbucks scan aesthetics
-  const renderSimulatedBarcode = (syncId: string) => {
-    // Generate barcode line heights/widths representation
-    const bars = [3, 1, 4, 2, 1, 3, 2, 4, 1, 2, 3, 1, 4, 2, 1, 3, 2, 1, 4, 3, 2, 1, 4, 2];
-    return (
-      <View style={styles.barcodeOuter}>
-        <View style={styles.barcodeContainer}>
-          {bars.map((weight, index) => (
-            <View 
-              key={index} 
-              style={[
-                styles.barcodeLine, 
-                { width: weight * 1.5, marginRight: 2 }
-              ]} 
-            />
-          ))}
-        </View>
-        <Text style={styles.barcodeText}>{syncId}</Text>
-      </View>
-    );
-  };
+
 
   return (
     <View style={styles.container}>
@@ -170,68 +235,32 @@ function RecapContent() {
               {draftRecaps.map((recap, index) => (
                 <View key={recap.id} style={styles.cardContainer}>
                   
-                  {/* Top half: Player EPSN headshot with gold stamp outline (Pillar 2 / Stamp Pattern) */}
+                  {/* Top half: Top 3 Picks (centered with round indicators underneath) */}
                   <View style={styles.cardTopHalf}>
-                    <View style={styles.goldLaurelContainer}>
-                      <Svg width={80} height={80} viewBox="0 0 100 100" style={styles.svgLaurel}>
-                        <Circle 
-                          cx="50" 
-                          cy="50" 
-                          r="44" 
-                          stroke={Colors.hofYellow} 
-                          strokeWidth="2" 
-                          strokeDasharray="6,4" 
-                          fill="none" 
-                        />
-                        <Circle 
-                          cx="50" 
-                          cy="50" 
-                          r="38" 
-                          stroke={Colors.hofYellow} 
-                          strokeWidth="1" 
-                          fill="none" 
-                        />
-                        {/* Svg Leaf Stamp patterns for Starbucks look */}
-                        <Path 
-                          d="M 50 12 C 45 22, 40 28, 48 34" 
-                          stroke={Colors.hofYellow} 
-                          strokeWidth="1.5" 
-                          fill="none" 
-                        />
-                        <Path 
-                          d="M 50 12 C 55 22, 60 28, 52 34" 
-                          stroke={Colors.hofYellow} 
-                          strokeWidth="1.5" 
-                          fill="none" 
-                        />
-                        <Circle cx="48" cy="22" r="2.5" fill={Colors.hofYellow} />
-                        <Circle cx="52" cy="22" r="2.5" fill={Colors.hofYellow} />
-                        {/* Stars */}
-                        <Path d="M 28 42 L 30 45 L 34 45 L 31 47 L 32 50 L 28 48 L 24 50 L 25 47 L 22 45 L 26 45 Z" fill={Colors.hofYellow} />
-                        <Path d="M 72 42 L 74 45 L 78 45 L 75 47 L 76 50 L 72 48 L 68 50 L 69 47 L 66 45 L 70 45 Z" fill={Colors.hofYellow} />
-                      </Svg>
-                      
-                      <Image 
-                        source={{ uri: recap.topPick.image }} 
-                        style={styles.playerImage} 
-                      />
+                    <View style={styles.picksContainer}>
+                      {recap.topPicks.map((pick, pIdx) => (
+                        <View key={pIdx} style={styles.playerUnit}>
+                          <Image 
+                            source={{ uri: pick.image }} 
+                            style={styles.playerImageCompact} 
+                          />
+                          <Text style={styles.roundText}>{pick.round}</Text>
+                        </View>
+                      ))}
                     </View>
 
                     {/* Header Title inside card */}
-                    <Text style={styles.cardHeaderTitle}>Elite Draft Recap</Text>
-                    <Text style={styles.cardHeaderSub}>Top Pick: {recap.topPick.name} ({recap.topPick.pick})</Text>
+                    <Text style={styles.cardHeaderTitle}>Draft Recap</Text>
+                    <Text style={styles.cardHeaderSub}>First Pick: {recap.topPicks[0].name} ({recap.topPicks[0].pick})</Text>
                   </View>
 
-                  {/* Bottom half: Oswald Score, Gold badge and Barcode (Pillar 3 / Barcode depth) */}
+                  {/* Bottom half: Oswald Score, Gold badge (Pillar 3 / Containment depth, no barcode) */}
                   <View style={styles.cardBottomHalf}>
                     <Text style={styles.scoreText}>{recap.grade}</Text>
                     
                     <View style={styles.goldPill}>
                       <Text style={styles.goldPillText}>Draft Efficiency: {recap.efficiency}</Text>
                     </View>
-
-                    {/* Barcode details */}
-                    {renderSimulatedBarcode(recap.syncId)}
 
                     {/* Tabular numeric stats section in JetBrains Mono */}
                     <View style={styles.recapStatsContainer}>
@@ -409,28 +438,31 @@ function createStyles(Colors: typeof import('@/constants/theme').LightColors, is
       padding: Spacing.two,
       position: 'relative',
     },
-    goldLaurelContainer: {
-      position: 'relative',
-      width: 80,
-      height: 80,
+    picksContainer: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      gap: 16,
+      marginBottom: Spacing.two,
+    },
+    playerUnit: {
       alignItems: 'center',
       justifyContent: 'center',
-      marginBottom: Spacing.one,
     },
-    svgLaurel: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-    },
-    playerImage: {
-      width: 48,
-      height: 48,
-      borderRadius: 24,
+    playerImageCompact: {
+      width: 44,
+      height: 44,
+      borderRadius: 22,
+      borderWidth: 2,
+      borderColor: '#FFFFFF',
       backgroundColor: 'rgba(255, 255, 255, 0.1)',
-      borderWidth: 1,
-      borderColor: Colors.hofYellow,
+    },
+    roundText: {
+      fontFamily: Fonts.stats,
+      fontSize: 10,
+      fontWeight: 'bold',
+      color: Colors.hofYellow,
+      marginTop: 4,
     },
     cardHeaderTitle: {
       fontFamily: Fonts.headings,
@@ -472,27 +504,7 @@ function createStyles(Colors: typeof import('@/constants/theme').LightColors, is
       fontWeight: '700',
       color: isDark ? Colors.hofYellow : '#8A6D00',
     },
-    barcodeOuter: {
-      alignItems: 'center',
-      justifyContent: 'center',
-      marginVertical: Spacing.half,
-    },
-    barcodeContainer: {
-      flexDirection: 'row',
-      height: 16,
-      alignItems: 'center',
-    },
-    barcodeLine: {
-      height: 16,
-      backgroundColor: Colors.primaryAccent,
-    },
-    barcodeText: {
-      fontFamily: Fonts.stats,
-      fontSize: 8,
-      color: Colors.secondaryAccent,
-      marginTop: Spacing.half,
-      letterSpacing: 1,
-    },
+
     recapStatsContainer: {
       flexDirection: 'row',
       alignItems: 'center',
